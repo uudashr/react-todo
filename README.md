@@ -3,9 +3,9 @@
 Simple React Todo Application
 
 ## Reference Documentation
-1. https://jestjs.io/docs/
-2. https://testing-library.com/docs/
-3. Fetch data using hooks https://www.robinwieruch.de/react-hooks-fetch-data/
+1. [Jest Documentation](https://jestjs.io/docs/getting-started)
+2. [Testing Library Documentation](https://testing-library.com/docs/)
+3. [How to fetch data with React Hooks](https://www.robinwieruch.de/react-hooks-fetch-data/)
 
 ## Testing
 ### jsdom
