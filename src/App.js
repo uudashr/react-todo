@@ -30,8 +30,8 @@ function App(props) {
               </RequireAuth>
             } 
           />
-          <Route path="/login" element={<LogIn authClient={todoClient} />} />
-          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signUp" element={<SignUp authClient={todoClient} />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

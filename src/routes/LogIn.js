@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 import { 
@@ -78,7 +77,7 @@ function LogIn(props) {
           <Title level={2}>
             Log in
           </Title>
-          { errorMessage && <Alert message={errorMessage} type='error' />}
+          { errorMessage && <Alert message={errorMessage} type='error' style={{ marginBottom: '1rem' }}/>}
           <Form.Item
             label="Email"
             name="email"
@@ -111,9 +110,5 @@ function LogIn(props) {
     </Row>
   );
 }
-
-LogIn.propTypes = {
-  authClient: PropTypes.object
-};
 
 export default LogIn;

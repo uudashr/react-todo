@@ -25,7 +25,8 @@ class TodoClient {
     }).catch(err => {
       const res = err.response;
       if (res.status === 401) {
-        return Promise.reject(new ApiError(res.data.code, res.data.message, { cause: err }));
+        const {code, message} = res.data.error;
+        return Promise.reject(new ApiError(code, message, { cause: err }));
       }
 
       return Promise.reject(err);
@@ -37,10 +38,18 @@ class TodoClient {
   }
 
   signUp(email, name, password) {
-
     return this.axiosInstance.post('/register', {
       email, name, password
-    }).then((res) => undefined);
+    }).then((res) => undefined)
+    .catch(err => {
+      const res = err.response;
+      if (res.status === 409) {
+        const {code, message} = res.data.error;
+        return Promise.reject(new ApiError(code, message, { cause: err }));
+      }
+
+      return Promise.reject(err);
+    });
   }
 
   userInfo() {

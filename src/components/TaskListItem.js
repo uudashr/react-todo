@@ -16,7 +16,9 @@ function TaskListItem(props) {
 
     setLoading(true);
     onStatusChange(task, (err) => {
-      setLoading(false);
+      if (err) {
+        setLoading(false);
+      }
     });
   };
 

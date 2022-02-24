@@ -3,7 +3,9 @@ import {
   Typography, 
   Form, Input, Button, 
   Row, 
-  Divider
+  Divider,
+  Alert,
+  message
 } from 'antd';
 
 import PropTypes from 'prop-types';
@@ -15,6 +17,7 @@ import {
 import './SignUp.css';
 
 import Schema from 'async-validator';
+import { useNavigate } from 'react-router-dom';
 Schema.warning = function(){};
 
 const { Title, Link } = Typography;
@@ -27,10 +30,26 @@ const validateMessages = {
 };
 
 function SignUp(props) {
-  const {authClient} = props;
+  const { authClient } = props;
 
-  const handleSignUp = async (email, name, password) => {
-    await authClient.signUp(email, name, password);
+  const [loading, setLoading] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const navigate = useNavigate();
+
+  const handleSignUp = ({email, name, password}) => {
+    if (!authClient) {
+      return;
+    }
+    
+    setLoading(true);
+    authClient.signUp(email, name, password).then(() => {
+      message.success('Registration succeed. Please log in!');
+      navigate('/login');
+    }).catch((err) => {
+      setErrorMessage(err.message);
+      setLoading(false);
+    });
   }
 
   return (
@@ -49,6 +68,7 @@ function SignUp(props) {
           minWidth: '25rem'
         }}
         validateMessages={validateMessages}
+        onFinish={handleSignUp}
       >
         <Title>
           <BookFilled /> Todo
@@ -57,6 +77,7 @@ function SignUp(props) {
         <Title level={2}>
           Sign up
         </Title>
+        { errorMessage && <Alert message={errorMessage} type='error' style={{ marginBottom: '1rem' }}/>}
         <Form.Item
           label="Email"
           name="email"
@@ -104,7 +125,7 @@ function SignUp(props) {
           <Input.Password />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>
+          <Button type='primary' htmlType='submit' loading={loading}>
             Sign me up
           </Button>
         </Form.Item>
