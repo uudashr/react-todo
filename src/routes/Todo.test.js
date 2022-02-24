@@ -5,7 +5,6 @@ import { message } from 'antd';
 
 import Todo from './Todo';
 
-
 jest.mock('antd', () => {
   const originalModule = jest.requireActual('antd');
 
@@ -140,17 +139,9 @@ describe('Todo with taskClient', () => {
       expect(taskClient.addTask).toBeCalledWith('Create spec document');
     });
 
-    await waitFor(() => {
-      expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
-    });
-
-    await waitFor(() => {
-      expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
-    });
-    
-    await waitFor(() => {
-      expect(message.info).toHaveBeenCalledWith('Task added');
-    });
+    expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
+    expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
+    expect(message.info).toHaveBeenCalledWith('Task added');
   });
 });
 

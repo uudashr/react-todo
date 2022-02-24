@@ -30,7 +30,7 @@ const validateMessages = {
   },
 };
 
-function LogIn(props) {
+function LogIn() {
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
