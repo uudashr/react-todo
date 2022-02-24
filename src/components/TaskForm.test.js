@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import TaskForm from './TaskForm';
@@ -10,9 +10,9 @@ describe('empty TaskForm', () => {
     render(<TaskForm />);
   };
 
-  beforeEach(() => setup());
-
   it('renders name text input', () => {
+    setup();
+
     const nameInput = screen.getByPlaceholderText('Enter task name');
 
     expect(nameInput).toHaveDisplayValue('');
@@ -20,6 +20,8 @@ describe('empty TaskForm', () => {
   });
   
   it('has disabled add task button', () => {
+    setup();
+
     const addTask = screen.getByRole('button');
 
     expect(addTask).toHaveTextContent('Add task');
@@ -27,6 +29,8 @@ describe('empty TaskForm', () => {
   });
 
   test('enter task name', () => {
+    setup();
+    
     const nameInput = screen.getByPlaceholderText('Enter task name');
     const addTask = screen.getByRole('button');
 

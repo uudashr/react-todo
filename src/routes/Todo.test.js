@@ -1,8 +1,10 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-
-import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 import { message } from 'antd';
+
+import Todo from './Todo';
+
 
 jest.mock('antd', () => {
   const originalModule = jest.requireActual('antd');
@@ -20,7 +22,7 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-describe('App with taskClient', () => {
+describe('Todo with taskClient', () => {
   const outstandingTasks = [
     { id: 1, name: 'Follow up SRE Support' },
     { id: 2, name: 'Read IAM Service Spec' },
@@ -38,7 +40,11 @@ describe('App with taskClient', () => {
       updateTaskStatus: jest.fn(),
     };
 
-    render(<App taskClient={taskClient} />);
+    render(
+      <BrowserRouter>
+        <Todo taskClient={taskClient} />
+      </BrowserRouter>
+    );
     return { taskClient };
   }
 
@@ -148,9 +154,13 @@ describe('App with taskClient', () => {
   });
 });
 
-describe('App with no taskClient', () => {
+describe('Todo with no taskClient', () => {
   const setup = () => {
-    render(<App />);
+    render(
+      <BrowserRouter>
+        <Todo />
+      </BrowserRouter>
+    );
   }
 
   it('renders no tasks', async () => {

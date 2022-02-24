@@ -4,13 +4,16 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import App from './App';
-import TaskClient from './client/TaskClient'
 
-const taskClient = new TaskClient();
+import TodoClient, { localTokenStorage } from './client/TodoClient';
+
+const todoClient = new TodoClient({
+  tokenStorage: localTokenStorage('__reactTodo:token'),
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App taskClient={taskClient} />
+    <App todoClient={todoClient} />
   </React.StrictMode>,
   document.getElementById('root')
 );

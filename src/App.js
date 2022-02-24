@@ -1,135 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { 
-  Row, 
-  Col, 
-  Space,
-  message,
-  Divider
-} from 'antd';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
-import TaskForm from './component/TaskForm';
-import TaskList from './component/TaskList';
+import { AuthProvider, RequireAuth } from './auth'
 
-import './App.css';
+import Todo from './routes/Todo';
+import LogIn from './routes/LogIn';
+import SignUp from './routes/SignUp';
 
 function App(props) {
-  const {taskClient} = props;
-  
-  const [outstandingTasks, setOutstandingTasks] = React.useState([]);
-  const [outstandingTasksLoading, setOutstandingTasksLoading] = React.useState(false);
-
-  const [completedTasks, setCompletedTasks] = React.useState([]);
-  const [completedTasksLoading, setCompletedTasksLoading] = React.useState(false);
-
-  const handleAddTask = async (name, done) => {
-    if (!taskClient) {
-      done();
-      return;
-    }
-
-    try {
-      await taskClient.addTask(name);
-      const [tempOutstandingTasks, tempCompletedTasks] = await Promise.all([taskClient.outstandingTasks(), taskClient.completedTasks()]);
-      setOutstandingTasks(tempOutstandingTasks);
-      setCompletedTasks(tempCompletedTasks);
-      done();
-      message.info('Task added');
-    } catch (e) {
-      done(e);
-      message.error(e.message);
-    }
-  }
-
-  const handleTaskStatusChange = async (task, done) => {
-    if (!taskClient) {
-      done();
-      return;
-    }
-
-    try {
-      await taskClient.updateTaskStatus(task.id, task.completed);
-      const [tempOutstandingTasks, tempCompletedTasks] = await Promise.all([taskClient.outstandingTasks(), taskClient.completedTasks()]);
-      setOutstandingTasks(tempOutstandingTasks);
-      setCompletedTasks(tempCompletedTasks);
-      done();
-      message.info('Task updated');
-    } catch (e) {
-      done(e);
-      message.error(e.message);
-    }
-  }
-
-  React.useEffect(() => {
-    if (!taskClient) {
-      return;
-    }
-
-    const loadData = async () => {
-      setOutstandingTasksLoading(true);
-      try {
-        setOutstandingTasks(await taskClient.outstandingTasks());
-      } catch (e) {
-        message.error(e.message);
-      } finally {
-        setOutstandingTasksLoading(false);
-      }
-    };
-
-    loadData()
-  }, [taskClient]);
-
-  React.useEffect(() => {
-    if (!taskClient) {
-      return;
-    }
-
-    const loadData = async () => {
-      setCompletedTasksLoading(true);
-      try {
-        setCompletedTasks(await taskClient.completedTasks());
-      } catch (e) {
-        message.error(e.message);
-      } finally {
-        setCompletedTasksLoading(false);
-      }
-    };
-
-    loadData();
-  }, [taskClient]);
+  const {todoClient} = props;
 
   return (
-    <Row
-      type='flex'
-      justify='center'
-      style={{ minHeight: '50vh', padding: '5rem' }}
-    >
-      <Col>
-        <Space direction='vertical'>
-          <TaskForm 
-            onAdd={handleAddTask}
+    <BrowserRouter>
+      <AuthProvider authClient={todoClient}>
+        <Routes>
+          <Route exact path="/" element={<Navigate to='/todo' />} />
+          <Route 
+            path="/todo" 
+            element={
+              <RequireAuth>
+                <Todo taskClient={todoClient} />
+              </RequireAuth>
+            } 
           />
-          <TaskList 
-            title='Tasks'
-            tasks={outstandingTasks}
-            loading={outstandingTasksLoading}
-            onItemStatusChange={handleTaskStatusChange}
-          />
-          <Divider plain dashed>Completed tasks</Divider>
-          <TaskList
-            tasks={completedTasks}
-            loading={completedTasksLoading}
-            onItemStatusChange={handleTaskStatusChange}
-          />
-        </Space>
-      </Col>
-    </Row>
+          <Route path="/login" element={<LogIn authClient={todoClient} />} />
+          <Route path="/signUp" element={<SignUp />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
 App.propTypes = {
-  taskClient: PropTypes.object,
+  todoClient: PropTypes.object,
 };
 
 export default App;
