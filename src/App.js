@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  BrowserRouter,
   Routes,
   Route,
   Navigate,
@@ -20,23 +19,22 @@ function App(props) {
   const { todoClient } = props;
 
   return (
-    <BrowserRouter>
-      <AuthProvider authClient={todoClient}>
-        <Routes>
-          <Route exact path="/" element={<Navigate to='/todo' />} />
-          <Route 
-            path="/todo" 
-            element={
-              <RequireAuth>
-                <Todo taskClient={todoClient} />
-              </RequireAuth>
-            } 
-          />
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/signUp" element={<SignUp authClient={todoClient} />} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+    
+    <AuthProvider authClient={todoClient}>
+      <Routes>
+        <Route exact path="/" element={<Navigate to='/todo' />} />
+        <Route 
+          path="/todo" 
+          element={
+            <RequireAuth>
+              <Todo taskClient={todoClient} />
+            </RequireAuth>
+          } 
+        />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/signUp" element={<SignUp authClient={todoClient} />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
@@ -51,7 +49,7 @@ App.propTypes = {
     allTasks: PropTypes.func.isRequired,
     outstandingTasks: PropTypes.func.isRequired,
     completedTasks: PropTypes.func.isRequired,
-    updateTask: PropTypes.func.isRequired,
+    updateTaskStatus: PropTypes.func.isRequired,
     deleteTask: PropTypes.func.isRequired
   }),
 };

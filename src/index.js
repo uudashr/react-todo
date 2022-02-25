@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
@@ -13,7 +15,9 @@ const todoClient = new TodoClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <App todoClient={todoClient} />
+    <BrowserRouter>
+      <App todoClient={todoClient} />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
