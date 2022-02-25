@@ -37,6 +37,7 @@ describe('Todo with taskClient', () => {
       completedTasks: jest.fn(() => Promise.resolve(completedTasks)),
       addTask: jest.fn(),
       updateTaskStatus: jest.fn(),
+      deleteTask: jest.fn()
     };
 
     render(
@@ -147,6 +148,33 @@ describe('Todo with taskClient', () => {
     
     expect(message.success).toHaveBeenCalledWith('Task added');
   });
+
+  test('delete task', async () => {
+    const { taskClient, outstandingTasks } = setup();
+
+    await waitFor(() => {
+      expect(taskClient.outstandingTasks).toHaveBeenCalled();
+    });
+
+    const deleteButtons = screen.queryAllByRole('button', { name: 'Delete' });
+    const deleteButton = deleteButtons[0];
+    const task = outstandingTasks[0];
+
+    taskClient.deleteTask.mockResolvedValue();
+    fireEvent.click(deleteButton);
+
+    expect(taskClient.deleteTask).toBeCalledWith(task.id);
+    
+    await waitFor(() => {
+      expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
+    });
+
+    await waitFor(() => {
+      expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
+    });
+
+    expect(message.success).toHaveBeenCalledWith('Task deleted');
+  })
 });
 
 describe('Todo with no taskClient', () => {
@@ -159,7 +187,7 @@ describe('Todo with no taskClient', () => {
   }
 
   it('renders no tasks', async () => {
-    const checkboxes = screen.queryAllByRole('checkbox')
+    const checkboxes = screen.queryAllByRole('checkbox');
     expect(checkboxes).toHaveLength(0);
   });
 
