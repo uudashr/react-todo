@@ -5,10 +5,10 @@ import { Row, Col, Button, Input } from "antd";
 
 
 function TaskForm(props) {
-  const {onAdd} = props;
+  const { onAdd, nameValue } = props;
   
-  const [name, setName] = React.useState(props.nameValue || '');
-  const [addTaskEnabled, setAddTaskEnabled] = React.useState(!!props.nameValue);
+  const [name, setName] = React.useState(nameValue || '');
+  const [addTaskEnabled, setAddTaskEnabled] = React.useState(!!nameValue);
   const [loading, setLoading] = React.useState(false);
 
   const inputRef = React.useRef(null);
