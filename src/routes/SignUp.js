@@ -142,8 +142,8 @@ function SignUp(props) {
 }
 
 SignUp.propTypes = {
-  authClient: PropTypes.exact({
-    signUp: PropTypes.func
+  authClient: PropTypes.shape({
+    signUp: PropTypes.func.isRequired
   })
 };
 

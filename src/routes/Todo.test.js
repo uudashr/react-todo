@@ -12,7 +12,7 @@ jest.mock('antd', () => {
     ...originalModule,
     message: {
       ...originalModule.message,
-      info: jest.fn(),
+      success: jest.fn(),
     }
   };
 });
@@ -91,7 +91,7 @@ describe('Todo with taskClient', () => {
       expect(taskClient.updateTaskStatus).toBeCalledWith(task.id, true);
     });
 
-    expect(message.info).toBeCalledWith('Task updated');
+    expect(message.success).toBeCalledWith('Task updated');
   });
 
   test('click/check completed task', async () => {
@@ -113,7 +113,7 @@ describe('Todo with taskClient', () => {
       expect(taskClient.updateTaskStatus).toBeCalledWith(task.id, false);
     });
 
-    expect(message.info).toBeCalledWith('Task updated');
+    expect(message.success).toBeCalledWith('Task updated');
   });
 
   test('add task', async () => {
@@ -141,7 +141,7 @@ describe('Todo with taskClient', () => {
 
     expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
     expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
-    expect(message.info).toHaveBeenCalledWith('Task added');
+    expect(message.success).toHaveBeenCalledWith('Task added');
   });
 });
 
@@ -169,6 +169,6 @@ describe('Todo with no taskClient', () => {
 
     fireEvent.click(addTask);
 
-    expect(message.info).not.toHaveBeenCalledWith('Task added');
+    expect(message.success).not.toHaveBeenCalledWith('Task added');
   });
 });

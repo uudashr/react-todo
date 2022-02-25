@@ -54,7 +54,12 @@ export function AuthProvider(props) {
 }
 
 AuthProvider.propTypes = {
-  authClient: PropTypes.object
+  authClient: PropTypes.shape({
+    logIn: PropTypes.func.isRequired,
+    logOut: PropTypes.func.isRequired,
+    token: PropTypes.func.isRequired,
+  }),
+  children: PropTypes.element.isRequired
 };
 
 export function RequireAuth(props) {
@@ -68,4 +73,8 @@ export function RequireAuth(props) {
   }
 
   return children;
+}
+
+RequireAuth.propTypes = {
+  children: PropTypes.element.isRequired
 }

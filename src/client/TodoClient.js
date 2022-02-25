@@ -40,7 +40,7 @@ class TodoClient {
   signUp(email, name, password) {
     return this.axiosInstance.post('/register', {
       email, name, password
-    }).then((res) => undefined)
+    }).then(res => undefined)
     .catch(err => {
       const res = err.response;
       if (res.status === 409) {
@@ -59,7 +59,7 @@ class TodoClient {
         'Authorization': `Bearer ${this.tokenStorage.get()}`,
       },
       withCredentials: true,
-    }).then((res) => {
+    }).then(res => {
       return { email: res.data.email, name: res.data.name };
     });
   }
@@ -75,7 +75,7 @@ class TodoClient {
         'Authorization': `Bearer ${this.tokenStorage.get()}`,
       },
       withCredentials: true,
-    }).then((res) => undefined);
+    }).then(res => undefined);
   }
 
   allTasks() {
@@ -85,7 +85,7 @@ class TodoClient {
         'Authorization': `Bearer ${this.tokenStorage.get()}`,
       },
       withCredentials: true,
-    }).then((res) => {
+    }).then(res => {
       return res.data;
     });
   }
@@ -111,7 +111,7 @@ class TodoClient {
       },
       params: { completed: true },
       withCredentials: true,
-    }).then((res) => {
+    }).then(res => {
       return res.data;
     });
   }
@@ -133,7 +133,17 @@ class TodoClient {
         'Authorization': `Bearer ${this.tokenStorage.get()}`,
       },
       withCredentials: true,
-    }).then((res) => undefined);
+    }).then(res => undefined);
+  }
+
+  deleteTask(id) {
+    // TODO: need to capture 401 to force logOut
+    return this.axiosInstance.delete(`/tasks/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${this.tokenStorage.get()}`,
+      },
+      withCredentials: true,
+    }).then(res => undefined);
   }
 }
 

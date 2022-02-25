@@ -14,6 +14,8 @@ import Todo from './routes/Todo';
 import LogIn from './routes/LogIn';
 import SignUp from './routes/SignUp';
 
+import './App.css';
+
 function App(props) {
   const {todoClient} = props;
 

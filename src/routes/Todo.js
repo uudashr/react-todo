@@ -48,7 +48,7 @@ function Todo(props) {
       setOutstandingTasks(tempOutstandingTasks);
       setCompletedTasks(tempCompletedTasks);
       done();
-      message.info('Task added');
+      message.success('Task added');
     } catch (e) {
       done(e);
       // TODO: capture Unauthorized and sign out
@@ -68,7 +68,7 @@ function Todo(props) {
       setOutstandingTasks(tempOutstandingTasks);
       setCompletedTasks(tempCompletedTasks);
       done();
-      message.info('Task updated');
+      message.success('Task updated');
     } catch (e) {
       done(e);
       // TODO: capture Unauthorized and sign out
@@ -76,9 +76,30 @@ function Todo(props) {
     }
   };
 
+  const handleDeleteTask = async (id, done) => {
+    if (!taskClient) {
+      done();
+      return;
+    }
+
+    try {
+      await taskClient.deleteTask(id)
+      const [tempOutstandingTasks, tempCompletedTasks] = await Promise.all([taskClient.outstandingTasks(), taskClient.completedTasks()]);
+      setOutstandingTasks(tempOutstandingTasks);
+      setCompletedTasks(tempCompletedTasks);
+      done();
+      message.success('Task deleted');
+    } catch (e) {
+      done(e);
+      // TODO: capture Unauthorized and sign out
+      message.error(e.message);
+    }
+    
+  }
+
   const handleLogOut = () => {
     auth.signOut();
-    message.info('Logged out');
+    message.success('Logged out');
     navigate('/login', { replace: true });
   };
 
@@ -175,12 +196,14 @@ function Todo(props) {
             tasks={outstandingTasks}
             loading={outstandingTasksLoading}
             onItemStatusChange={handleTaskStatusChange}
+            onItemDelete={handleDeleteTask}
           />
           <Divider plain dashed>Completed tasks</Divider>
           <TaskList
             tasks={completedTasks}
             loading={completedTasksLoading}
             onItemStatusChange={handleTaskStatusChange}
+            onItemDelete={handleDeleteTask}
           />
         </Space>
       </Col>
@@ -189,7 +212,12 @@ function Todo(props) {
 }
 
 Todo.propTypes = {
-  taskClient: PropTypes.object,
+  taskClient: PropTypes.shape({
+    outstandingTasks: PropTypes.func.isRequired,
+    completedTasks: PropTypes.func.isRequired,
+    addTask: PropTypes.func.isRequired,
+    updateTaskStatus: PropTypes.func.isRequired
+  }),
 };
 
 export default Todo;

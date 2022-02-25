@@ -8,14 +8,22 @@ const { Title } = Typography;
 
 function TaskList(props) {
 
-  const {title, onItemStatusChange, loading, tasks} = props;
+  const {title, loading, tasks, onItemStatusChange, onItemDelete} = props;
   
   const handleItemStatusChange = (task, done) => { // task{id, completed}, done(err)
     if (!onItemStatusChange) {
-      return
+      return;
     }
     
     onItemStatusChange(task, done);
+  };
+
+  const handleItemDelete = (id, done) => {
+    if (!onItemDelete) {
+      return;
+    }
+
+    onItemDelete(id, done);
   };
 
   const header = title ? <Title level={4}>{title}</Title> : undefined;
@@ -28,20 +36,25 @@ function TaskList(props) {
       header={header}
       dataSource={tasks}
       renderItem={(task) => (
-        <TaskListItem key={task.id} task={task} onStatusChange={handleItemStatusChange} />
+        <TaskListItem 
+          key={task.id} 
+          task={task} 
+          onStatusChange={handleItemStatusChange} 
+          onDeleteClick={handleItemDelete}
+        />
       )} />
   );
 }
 
 TaskList.propTypes = {
   title : PropTypes.string, 
-  onItemStatusChange: PropTypes.func, 
   loading: PropTypes.bool, 
-  tasks: PropTypes.arrayOf(PropTypes.exact({
+  tasks: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     completed: PropTypes.bool
-  }))
+  })),
+  onItemDelete: PropTypes.func
 };
 
 export default TaskList;
