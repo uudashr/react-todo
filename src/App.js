@@ -17,7 +17,7 @@ import SignUp from './routes/SignUp';
 import './App.css';
 
 function App(props) {
-  const {todoClient} = props;
+  const { todoClient } = props;
 
   return (
     <BrowserRouter>
@@ -41,7 +41,19 @@ function App(props) {
 }
 
 App.propTypes = {
-  todoClient: PropTypes.object,
+  todoClient: PropTypes.shape({
+    logIn: PropTypes.func.isRequired,
+    token: PropTypes.func.isRequired,
+    signUp: PropTypes.func.isRequired,
+    userInfo: PropTypes.func.isRequired,
+    logOut: PropTypes.func.isRequired,
+    addTask: PropTypes.func.isRequired,
+    allTasks: PropTypes.func.isRequired,
+    outstandingTasks: PropTypes.func.isRequired,
+    completedTasks: PropTypes.func.isRequired,
+    updateTask: PropTypes.func.isRequired,
+    deleteTask: PropTypes.func.isRequired
+  }),
 };
 
 export default App;
