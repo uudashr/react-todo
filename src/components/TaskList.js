@@ -7,7 +7,14 @@ import TaskListItem from './TaskListItem';
 const { Title } = Typography;
 
 function TaskList(props) {
-  const {title, loading, tasks, onItemStatusChange, onItemDelete} = props;
+  const { 
+    title, 
+    loading, 
+    tasks, 
+    onItemStatusChange, 
+    onItemNameChange, 
+    onItemDelete
+  } = props;
   
   const header = title ? <Title level={4}>{title}</Title> : undefined;
 
@@ -23,7 +30,8 @@ function TaskList(props) {
           key={task.id} 
           task={task} 
           onStatusChange={onItemStatusChange} 
-          onDeleteClick={onItemDelete}
+          onNameChange={onItemNameChange}
+          onDelete={onItemDelete}
         />
       )} />
   );
@@ -38,6 +46,7 @@ TaskList.propTypes = {
     completed: PropTypes.bool
   })),
   onStatusChange: PropTypes.func,
+  onItemNameChange: PropTypes.func,
   onItemDelete: PropTypes.func
 };
 

@@ -1,3 +1,4 @@
+import { UnderlineOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 class TodoClient {
@@ -134,6 +135,25 @@ class TodoClient {
       },
       withCredentials: true,
     }).then(res => undefined);
+  }
+
+  updateTaskName(id, name) {
+    return this.axiosInstance.put(`/tasks/${id}/name`, name, {
+      headers: {
+        'Authorization': `Bearer ${this.tokenStorage.get()}`,
+        'Content-Type': 'text/plain'
+      },
+      withCredentials: true,
+    }).then(res => undefined)
+    .catch(err => {
+      const res = err.response;
+      if (res.status === 400) {
+        const {code, message} = res.data.error;
+        return Promise.reject(new ApiError(code, message, { cause: err }));
+      }
+
+      return Promise.reject(err);
+    });
   }
 
   deleteTask(id) {

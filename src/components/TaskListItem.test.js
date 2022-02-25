@@ -33,7 +33,7 @@ describe('TaskListItem with outstanding task', () => {
       <TaskListItem 
         task={task} 
         onStatusChange={handleStatusChange}
-        onDeleteClick={handleDelete}
+        onDelete={handleDelete}
       />
     );
 
@@ -103,7 +103,7 @@ describe('TaskListItem with completed task', () => {
       <TaskListItem 
         task={task} 
         onStatusChange={handleStatusChange} 
-        onDeleteClick={handleDelete}
+        onDelete={handleDelete}
       />
     );
 

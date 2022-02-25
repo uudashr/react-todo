@@ -71,6 +71,21 @@ function Todo(props) {
     }
   };
 
+  const handleTaskNameChange = async (task, done) => {
+    try {
+      await taskClient.updateTaskName(task.id, task.name);
+      const [tempOutstandingTasks, tempCompletedTasks] = await Promise.all([taskClient.outstandingTasks(), taskClient.completedTasks()]);
+      setOutstandingTasks(tempOutstandingTasks);
+      setCompletedTasks(tempCompletedTasks);
+      done();
+      message.success('Task updated');
+    } catch (e) {
+      done(e);
+      // TODO: capture Unauthorized and sign out
+      message.error(e.message);
+    }
+  };
+
   const handleDeleteTask = async (id, done) => {
     try {
       await taskClient.deleteTask(id)
@@ -84,8 +99,7 @@ function Todo(props) {
       // TODO: capture Unauthorized and sign out
       message.error(e.message);
     }
-    
-  }
+  };
 
   const handleLogOut = () => {
     auth.signOut();
@@ -186,6 +200,7 @@ function Todo(props) {
             tasks={outstandingTasks}
             loading={outstandingTasksLoading}
             onItemStatusChange={handleTaskStatusChange}
+            onItemNameChange={handleTaskNameChange}
             onItemDelete={handleDeleteTask}
           />
           <Divider plain dashed>Completed tasks</Divider>
@@ -193,6 +208,7 @@ function Todo(props) {
             tasks={completedTasks}
             loading={completedTasksLoading}
             onItemStatusChange={handleTaskStatusChange}
+            onItemNameChange={handleTaskNameChange}
             onItemDelete={handleDeleteTask}
           />
         </Space>
