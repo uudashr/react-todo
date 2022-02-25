@@ -87,11 +87,10 @@ describe('Todo with taskClient', () => {
     taskClient.updateTaskStatus.mockResolvedValue();
     fireEvent.click(checkbox);
 
+    expect(taskClient.updateTaskStatus).toBeCalledWith(task.id, true);
     await waitFor(() => {
-      expect(taskClient.updateTaskStatus).toBeCalledWith(task.id, true);
+      expect(message.success).toBeCalledWith('Task updated');
     });
-
-    expect(message.success).toBeCalledWith('Task updated');
   });
 
   test('click/check completed task', async () => {
@@ -109,15 +108,16 @@ describe('Todo with taskClient', () => {
     taskClient.updateTaskStatus.mockResolvedValue();
     fireEvent.click(checkbox);
 
+    expect(taskClient.updateTaskStatus).toBeCalledWith(task.id, false);
     await waitFor(() => {
-      expect(taskClient.updateTaskStatus).toBeCalledWith(task.id, false);
+      expect(message.success).toBeCalledWith('Task updated');
     });
-
-    expect(message.success).toBeCalledWith('Task updated');
   });
 
   test('add task', async () => {
     const { taskClient } = setup();
+
+    const newTaskName = 'Create spec document';
 
     await waitFor(() => {
       expect(taskClient.outstandingTasks).toHaveBeenCalled();
@@ -130,17 +130,21 @@ describe('Todo with taskClient', () => {
     const taskNameInput = screen.getByPlaceholderText('Enter task name');
     const addTask = screen.getByRole('button', { name: 'Add task' });
 
-    fireEvent.change(taskNameInput, {target: {value: 'Create spec document'}});
+    fireEvent.change(taskNameInput, { target: { value: newTaskName } });
 
     taskClient.addTask.mockResolvedValue();
     fireEvent.click(addTask);
 
+    expect(taskClient.addTask).toBeCalledWith(newTaskName);
+
     await waitFor(() => {
-      expect(taskClient.addTask).toBeCalledWith('Create spec document');
+      expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
     });
 
-    expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
-    expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
+    await waitFor(() => {
+      expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
+    });
+    
     expect(message.success).toHaveBeenCalledWith('Task added');
   });
 });
@@ -162,10 +166,12 @@ describe('Todo with no taskClient', () => {
   test('add task', async () => {
     setup();
 
+    const newTaskName = 'Create spec document';
+
     const taskNameInput = screen.getByPlaceholderText('Enter task name');
     const addTask = screen.getByRole('button', { name: 'Add task' });
 
-    fireEvent.change(taskNameInput, {target: {value: 'Create spec document'}});
+    fireEvent.change(taskNameInput, { target: { value: newTaskName } });
 
     fireEvent.click(addTask);
 
