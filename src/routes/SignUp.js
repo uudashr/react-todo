@@ -37,12 +37,14 @@ function SignUp(props) {
 
   const navigate = useNavigate();
 
-  const handleSignUp = ({email, name, password}) => {
+  const handleSignUp = ({ email, name, password }) => {
     if (!authClient) {
       return;
     }
     
     setLoading(true);
+    setErrorMessage('');
+    
     authClient.signUp(email, name, password).then(() => {
       message.success('Registration succeed. Please log in!');
       navigate('/login');
@@ -140,7 +142,9 @@ function SignUp(props) {
 }
 
 SignUp.propTypes = {
-  authClient: PropTypes.object
+  authClient: PropTypes.exact({
+    signUp: PropTypes.func
+  })
 };
 
 

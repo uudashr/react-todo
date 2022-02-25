@@ -37,7 +37,7 @@ function LogIn() {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  const handleLogIn = ({email, password}) => {
+  const handleLogIn = ({ email, password }) => {
     setLoading(true);
     setErrorMessage('');
 

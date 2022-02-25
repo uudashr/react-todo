@@ -1,15 +1,48 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useNavigate } from "react-router-dom";
+import { message } from 'antd';
 
 import SignUp from './SignUp';
 
+jest.mock('antd', () => {
+  const originalModule = jest.requireActual('antd');
+
+  return {
+    ...originalModule,
+    message: {
+      ...originalModule.message,
+      success: jest.fn(),
+    }
+  };
+});
+
+jest.mock('react-router-dom', () => {
+  const navigate = jest.fn();
+  const originalModule = jest.requireActual('react-router-dom')
+
+  return {
+    ...originalModule,
+    useNavigate: () => navigate,
+  };
+});
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
 describe('SignUp', () => {
   const setup = () => {
+    const authClient = {
+      signUp: jest.fn()
+    };
+
     render(
       <BrowserRouter>
-        <SignUp />
+        <SignUp authClient={authClient}/>
       </BrowserRouter>
     );
+
+    return { authClient };
   };
 
   it('renders email input', () => {
@@ -175,6 +208,66 @@ describe('SignUp', () => {
       const message = screen.queryByText('The passwords not match!');
       expect(message).not.toBeInTheDocument();
     });
+  });
+
+  test('signup succeed', async () => {
+    const { authClient } = setup();
+
+    const email = 'john.appleseed@mail.com';
+    const name = 'John Appleseed';
+    const password = 'secret';
+
+    const emailInput = screen.getByLabelText('Email');
+    const nameInput = screen.getByLabelText('Name');
+    const passwordInput = screen.getByLabelText('Password');
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
+    const signUpButton = screen.getByRole('button', { name: 'Sign me up' });
+
+    fireEvent.change(emailInput, { target: { value: email } });
+    fireEvent.change(nameInput, { target: { value: name } });
+    fireEvent.change(passwordInput, { target: { value: password } });
+    fireEvent.change(confirmPasswordInput, { target: { value: password } });
+
+    authClient.signUp.mockResolvedValue(undefined);
+    fireEvent.click(signUpButton);
+
+    await waitFor(() => {
+      expect(authClient.signUp).toBeCalledWith(email, name, password);
+    });
+
+    const navigate = useNavigate();
+    expect(message.success).toBeCalledWith('Registration succeed. Please log in!');
+    expect(navigate).toBeCalledWith('/login');
+  });
+
+  test('signup failed', async () => {
+    const { authClient } = setup();
+
+    const email = 'john.appleseed@mail.com';
+    const name = 'John Appleseed';
+    const password = 'secret';
+    const errorMessage = 'Oops';
+
+    const emailInput = screen.getByLabelText('Email');
+    const nameInput = screen.getByLabelText('Name');
+    const passwordInput = screen.getByLabelText('Password');
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
+    const signUpButton = screen.getByRole('button', { name: 'Sign me up' });
+
+    fireEvent.change(emailInput, { target: { value: email } });
+    fireEvent.change(nameInput, { target: { value: name } });
+    fireEvent.change(passwordInput, { target: { value: password } });
+    fireEvent.change(confirmPasswordInput, { target: { value: password } });
+
+    authClient.signUp.mockRejectedValue(new Error(errorMessage));
+
+    fireEvent.click(signUpButton);
+    await waitFor(() => {
+      expect(authClient.signUp).toBeCalledWith(email, name, password);
+    });
+
+    const errorMessageElement = screen.getByText(errorMessage);
+    expect(errorMessageElement).toBeInTheDocument();
   });
 
 });

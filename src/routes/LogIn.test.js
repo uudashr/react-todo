@@ -130,7 +130,7 @@ describe('Login', () => {
     });
   });
 
-  test('login success', async () => {
+  test('login succeed', async () => {
     const { authClient } = setup();
 
     const email = 'john.appleseed@mail.com';
@@ -158,21 +158,25 @@ describe('Login', () => {
   test('login failed', async () => {
     const { authClient } = setup();
 
+    const email = 'john.appleseed@mail.com';
+    const password = 'secret';
+    const errorMessage = 'Opps';
+
     const emailInput = screen.getByLabelText('Email');
     const passwordInput = screen.getByLabelText('Password');
     const logInButton = screen.getByRole('button', { name: 'Log in' });
 
-    fireEvent.change(emailInput, { target: { value: "john.appleseed@mail.com" } });
-    fireEvent.change(passwordInput, { target: { value: "secret" } });
+    fireEvent.change(emailInput, { target: { value: email } });
+    fireEvent.change(passwordInput, { target: { value: password } });
 
-    authClient.logIn.mockRejectedValue(new Error('Oops'));
+    authClient.logIn.mockRejectedValue(new Error(errorMessage));
 
     fireEvent.click(logInButton);
     await waitFor(() => {
-      expect(authClient.logIn).toBeCalledWith("john.appleseed@mail.com", "secret");
+      expect(authClient.logIn).toBeCalledWith(email, password);
     });
 
-    const errorMessage = screen.getByText('Oops');
-    expect(errorMessage).toBeInTheDocument();
+    const errorMessageElement = screen.getByText(errorMessage);
+    expect(errorMessageElement).toBeInTheDocument();
   });
 });
