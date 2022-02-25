@@ -20,37 +20,38 @@ describe('TaskList with title', () => {
 });
 
 describe('TaskList with tasks', () => {
-  const title = 'This is title';
-  const tasks = [
-    { id: 1, name: 'Follow up SRE Support' },
-    { id: 2, name: 'Read IAM Service Spec' },
-    { id: 3, name: 'Research chat protocols', completed: true },
-  ]
-
-  
-
   const setup = () => {
+    const title = 'This is title';
+    const tasks = [
+      { id: 1, name: 'Follow up SRE Support' },
+      { id: 2, name: 'Read IAM Service Spec' },
+      { id: 3, name: 'Research chat protocols', completed: true },
+    ]
+
     const handleItemStatusChange = jest.fn();
+    const handleItemDelete = jest.fn();
+
     render(
       <TaskList 
         title={title} 
         tasks={tasks} 
         onItemStatusChange={handleItemStatusChange}
+        onItemDelete={handleItemDelete}
       />
     );
-    return {handleItemStatusChange};
+    return { title, tasks, handleItemStatusChange, handleItemDelete };
   };
 
 
   it('renders the title', () => {
-    setup();
+    const { title } = setup();
 
     const element = screen.getByText(title);
     expect(element).toBeInTheDocument();
   });
 
   it('renders the TaskListItem', () => {
-    setup();
+    const { tasks } = setup();
 
     const checkboxes = screen.queryAllByRole('checkbox')
     expect(checkboxes).toHaveLength(tasks.length);
@@ -62,7 +63,7 @@ describe('TaskList with tasks', () => {
   });
 
   test('toggle check/click the task', () => {
-    const {handleItemStatusChange} = setup();
+    const { tasks, handleItemStatusChange } = setup();
     
     tasks.forEach((task, index) => {
       const checkbox = screen.getByLabelText(task.name);
@@ -72,6 +73,21 @@ describe('TaskList with tasks', () => {
       const [taskArg, ] = handleItemStatusChange.mock.calls[index];
       expect(taskArg.id).toEqual(task.id);
       expect(taskArg.completed).not.toEqual(task.completed || false);
+    });
+  });
+
+  test('delete task', () => {
+    const { tasks, handleItemDelete } = setup();
+
+    const deleteButtons = screen.queryAllByRole('button', { name: 'Delete' });
+    
+    tasks.forEach((task, index) => {
+      const deleteButton = deleteButtons[index];
+      fireEvent.click(deleteButton);
+
+      expect(handleItemDelete).toBeCalledTimes(index + 1);
+      const [taskId, ] = handleItemDelete.mock.calls[index];
+      expect(taskId).toEqual(task.id);
     });
   });
 });

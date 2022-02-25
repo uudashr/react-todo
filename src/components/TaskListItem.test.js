@@ -56,7 +56,6 @@ describe('TaskListItem with outstanding task', () => {
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).toBeEnabled();
     expect(checkbox).not.toBeChecked();
-    
 
     fireEvent.click(checkbox);
 
@@ -79,6 +78,7 @@ describe('TaskListItem with outstanding task', () => {
     expect(deleteButton).toBeEnabled();
     
     fireEvent.click(deleteButton);
+
     expect(handleDelete).toBeCalled();
     const [idArg, doneArg] = handleDelete.mock.calls[0];
     expect(idArg).toEqual(task.id);
