@@ -57,11 +57,6 @@ function Todo(props) {
   };
 
   const handleTaskStatusChange = async (task, done) => {
-    if (!taskClient) {
-      done();
-      return;
-    }
-
     try {
       await taskClient.updateTaskStatus(task.id, task.completed);
       const [tempOutstandingTasks, tempCompletedTasks] = await Promise.all([taskClient.outstandingTasks(), taskClient.completedTasks()]);
@@ -77,11 +72,6 @@ function Todo(props) {
   };
 
   const handleDeleteTask = async (id, done) => {
-    if (!taskClient) {
-      done();
-      return;
-    }
-
     try {
       await taskClient.deleteTask(id)
       const [tempOutstandingTasks, tempCompletedTasks] = await Promise.all([taskClient.outstandingTasks(), taskClient.completedTasks()]);
