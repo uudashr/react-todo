@@ -22,16 +22,16 @@ afterEach(() => {
 });
 
 describe('Todo with taskClient', () => {
-  const outstandingTasks = [
-    { id: 1, name: 'Follow up SRE Support' },
-    { id: 2, name: 'Read IAM Service Spec' },
-  ];
-
-  const completedTasks = [
-    { id: 3, name: 'Research chat protocols', completed: true },
-  ];
-
   const setup = () => {
+    const outstandingTasks = [
+      { id: 1, name: 'Follow up SRE Support' },
+      { id: 2, name: 'Read IAM Service Spec' },
+    ];
+  
+    const completedTasks = [
+      { id: 3, name: 'Research chat protocols', completed: true },
+    ];
+
     const taskClient = {
       outstandingTasks: jest.fn(() => Promise.resolve(outstandingTasks)),
       completedTasks: jest.fn(() => Promise.resolve(completedTasks)),
@@ -44,11 +44,11 @@ describe('Todo with taskClient', () => {
         <Todo taskClient={taskClient} />
       </BrowserRouter>
     );
-    return { taskClient };
+    return { taskClient, outstandingTasks, completedTasks };
   }
 
   it('renders outstanding tasks', async () => {
-    const { taskClient } = setup();
+    const { taskClient, outstandingTasks } = setup();
 
     await waitFor(() => {
       expect(taskClient.outstandingTasks).toHaveBeenCalled();
@@ -61,7 +61,7 @@ describe('Todo with taskClient', () => {
   });
 
   it('renders completed tasks', async () => {
-    const { taskClient } = setup();
+    const { taskClient, completedTasks } = setup();
 
     await waitFor(() => {
       expect(taskClient.completedTasks).toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('Todo with taskClient', () => {
   });
 
   test('click/check outstanding task', async () => {
-    const { taskClient } = setup();
+    const { taskClient, outstandingTasks } = setup();
 
     await waitFor(() => {
       expect(taskClient.outstandingTasks).toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe('Todo with taskClient', () => {
   });
 
   test('click/check completed task', async () => {
-    const { taskClient } = setup();
+    const { taskClient, completedTasks } = setup();
 
     await waitFor(() => {
       expect(taskClient.completedTasks).toHaveBeenCalled();
