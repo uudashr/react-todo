@@ -115,22 +115,31 @@ function TaskView(props) {
     onEdit = () => {}
   } = props;
 
+  const mounted = React.useRef(false);
+  
   const [deleting, setDeleting] = React.useState(false);
   const [changingStatus, setChangingStatus] = React.useState(false);
 
   const handleStatusChange = (completed) => {
     setChangingStatus(true);
     onStatusChange(completed, (err) => {
-      setChangingStatus(false);
+      mounted.current && setChangingStatus(false);
     });
   };
 
   const handleDelete = () => {
     setDeleting(true);
     onDelete((err) => {
-      setDeleting(false)
+      mounted.current && setDeleting(false)
     });
   };
+
+  React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    }
+  }, []);
 
   return (
     <>
