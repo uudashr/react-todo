@@ -49,6 +49,12 @@ describe('TaskListItem with outstanding task', () => {
 
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
+
+    const editButton = screen.getByRole('button', { name: 'Edit' })
+    expect(editButton).toBeInTheDocument();
+
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
+    expect(deleteButton).toBeInTheDocument();
   });
 
   test('click checkbox', () => {
@@ -117,8 +123,11 @@ describe('TaskListItem with completed task', () => {
     const item = screen.getByText(task.name);
     expect(item).toBeInTheDocument();
 
-    const checkbox = screen.getByRole('checkbox');
-    expect(checkbox).toBeChecked();
+    const editButton = screen.getByRole('button', { name: 'Edit' })
+    expect(editButton).toBeInTheDocument();
+
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
+    expect(deleteButton).toBeInTheDocument();
   });
 
   test('click checkbox', () => {
