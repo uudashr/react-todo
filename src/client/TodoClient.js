@@ -168,7 +168,7 @@ class TodoClient {
 
 export default TodoClient;
 
-export class ApiError extends Error {
+class ApiError extends Error {
   constructor(code, message, ...params) {
     super(message, ...params);
 
