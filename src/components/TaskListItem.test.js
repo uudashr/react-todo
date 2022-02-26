@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import TaskListItem from './TaskListItem';
+import { act } from 'react-dom/test-utils';
 
 describe('TaskListItem with no task', () => {
   it('renders checkbox', () => {
@@ -63,7 +64,7 @@ describe('TaskListItem with outstanding task', () => {
     const [taskArg, doneArg] = handleStatusChange.mock.calls[0];
     expect(taskArg.completed).toEqual(true);
     expect(checkbox).toBeDisabled();
-    doneArg();
+    act(() => doneArg());
   });
 
   test('click delete', () => {
@@ -84,7 +85,7 @@ describe('TaskListItem with outstanding task', () => {
     expect(idArg).toEqual(task.id);
     expect(checkbox).toBeDisabled();
     expect(editButton).toBeDisabled();
-    doneArg();
+    act(() => doneArg());
   });
 });
 
@@ -134,7 +135,7 @@ describe('TaskListItem with completed task', () => {
     expect(taskArg.id).toEqual(task.id);
     expect(taskArg.completed).toEqual(false);
     expect(checkbox).toBeDisabled();
-    doneArg();
+    act(() => doneArg());
   });
 
   test('click delete', () => {
@@ -154,6 +155,6 @@ describe('TaskListItem with completed task', () => {
     expect(idArg).toEqual(task.id);
     expect(checkbox).toBeDisabled();
     expect(editButton).toBeDisabled();
-    doneArg();
+    act(() => doneArg());
   });
 });
