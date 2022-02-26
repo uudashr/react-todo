@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { message } from 'antd';
 
+import { AuthProvider } from '../auth';
 import Todo from './Todo';
 
 jest.mock('antd', () => {
@@ -32,6 +33,12 @@ describe('Todo with taskClient', () => {
       { id: 3, name: 'Research chat protocols', completed: true },
     ];
 
+    const authClient = {
+      logIn: jest.fn(),
+      logOut: jest.fn(),
+      token: jest.fn()
+    };
+
     const taskClient = {
       outstandingTasks: jest.fn(() => Promise.resolve(outstandingTasks)),
       completedTasks: jest.fn(() => Promise.resolve(completedTasks)),
@@ -42,10 +49,12 @@ describe('Todo with taskClient', () => {
 
     render(
       <BrowserRouter>
-        <Todo taskClient={taskClient} />
+        <AuthProvider authClient={authClient}>
+          <Todo taskClient={taskClient} />
+        </AuthProvider>
       </BrowserRouter>
     );
-    return { taskClient, outstandingTasks, completedTasks };
+    return { authClient, taskClient, outstandingTasks, completedTasks };
   }
 
   it('renders outstanding tasks', async () => {
@@ -174,7 +183,24 @@ describe('Todo with taskClient', () => {
     });
 
     expect(message.success).toHaveBeenCalledWith('Task deleted');
-  })
+  });
+
+  test('click sign out', async () => {
+    const { authClient, taskClient } = setup();
+
+    const logOutLink = screen.getByRole('button', { name: 'Log out' });
+
+    await waitFor(() => {
+      expect(taskClient.outstandingTasks).toHaveBeenCalled();
+    });
+
+    await waitFor(() => {
+      expect(taskClient.completedTasks).toHaveBeenCalled();
+    });
+
+    fireEvent.click(logOutLink);
+    expect(authClient.logOut).toBeCalled();
+  });
 });
 
 describe('Todo with no taskClient', () => {
