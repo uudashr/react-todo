@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, useLinkClickHandler, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 
 import { AuthProvider } from '../auth';
@@ -15,6 +15,16 @@ jest.mock('antd', () => {
       ...originalModule.message,
       success: jest.fn(),
     }
+  };
+});
+
+jest.mock('react-router-dom', () => {
+  const navigate = jest.fn();
+  const originalModule = jest.requireActual('react-router-dom')
+
+  return {
+    ...originalModule,
+    useNavigate: () => navigate,
   };
 });
 
@@ -189,6 +199,7 @@ describe('Todo with taskClient', () => {
     const { authClient, taskClient } = setup();
 
     const logOutLink = screen.getByRole('button', { name: 'Log out' });
+    const navigate = useNavigate();
 
     await waitFor(() => {
       expect(taskClient.outstandingTasks).toHaveBeenCalled();
@@ -200,6 +211,8 @@ describe('Todo with taskClient', () => {
 
     fireEvent.click(logOutLink);
     expect(authClient.logOut).toBeCalled();
+    expect(message.success).toBeCalledWith('Logged out');
+    expect(navigate).toBeCalledWith('/login', { replace: true });
   });
 });
 
