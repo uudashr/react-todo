@@ -26,7 +26,7 @@ function TaskForm(props) {
     });
   };
 
-  const handleKeyEnter = (event) => {
+  const handleKeyEnter = () => {
     if (!name) {
       return;
     }
@@ -38,8 +38,8 @@ function TaskForm(props) {
     setLoading(true);
     onAdd(name, (err) => {
       setLoading(false);
-      inputRef.current.focus();
       setName('');
+      inputRef.current.focus();
     });
   };
 
@@ -48,7 +48,7 @@ function TaskForm(props) {
       return;
     }
 
-    handleKeyEnter(event);
+    handleKeyEnter();
   };
 
   const handleNameChange = (event) => {

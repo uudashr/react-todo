@@ -34,7 +34,7 @@ describe('empty TaskForm', () => {
     const nameInput = screen.getByPlaceholderText('Enter task name');
     const addTask = screen.getByRole('button');
 
-    fireEvent.change(nameInput, {target: {value: 'Create spec document'}});
+    fireEvent.change(nameInput, { target: { value: 'Create spec document' } });
     expect(nameInput).toHaveDisplayValue('Create spec document');
     expect(addTask).toBeEnabled();
   });
@@ -95,7 +95,7 @@ describe('non empty TaskForm', () => {
     expect(nameInput).toHaveDisplayValue(nameValue);
     expect(nameInput).toBeEnabled();
 
-    fireEvent.keyPress(nameInput, {key: 'Enter', code: 'Enter', charCode: 13});
+    fireEvent.keyPress(nameInput, { key: 'Enter', code: 'Enter', charCode: 13 });
 
     expect(handleAdd).toBeCalled();
     const [nameArg, doneArg] = handleAdd.mock.calls[0];
@@ -116,8 +116,8 @@ describe('non empty TaskForm', () => {
     expect(nameInput).toHaveDisplayValue(nameValue);
     expect(nameInput).toBeEnabled();
 
-    fireEvent.keyPress(nameInput, {key: 'o', code: 'KeyO', charCode: 79});
-    fireEvent.keyPress(nameInput, {key: 'l', code: 'KeyL', charCode: 76});
+    fireEvent.keyPress(nameInput, { key: 'o', code: 'KeyO', charCode: 79 });
+    fireEvent.keyPress(nameInput, { key: 'l', code: 'KeyL', charCode: 76 });
 
     expect(handleAdd).not.toBeCalled();
   })

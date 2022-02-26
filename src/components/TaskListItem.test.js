@@ -178,7 +178,7 @@ describe('TaskListItem with task', () => {
     setup(task);
     const modifiedTaskName = task.name + ' (modified)';
 
-    const checkbox = screen.getByRole('checkbox', { name: task.name});
+    const checkbox = screen.getByRole('checkbox', { name: task.name });
     const editButton = screen.getByRole('button', { name: 'Edit' });
     const deleteButton = screen.getByRole('button', { name: 'Delete' });
 
@@ -194,6 +194,32 @@ describe('TaskListItem with task', () => {
 
     fireEvent.change(input, { target: { value: modifiedTaskName } });
     fireEvent.click(cancelButton);
+
+    expect(input).not.toBeInTheDocument();
+    expect(saveButton).not.toBeInTheDocument();
+    expect(cancelButton).not.toBeInTheDocument();
+  });
+
+  test.each(testCases)('test edit and press escape on $name task', ({ task }) => {
+    setup(task);
+    const modifiedTaskName = task.name + ' (modified)';
+
+    const checkbox = screen.getByRole('checkbox', { name: task.name});
+    const editButton = screen.getByRole('button', { name: 'Edit' });
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+
+    fireEvent.click(editButton);
+    const input = screen.getByDisplayValue(task.name);
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+
+    expect(input).toHaveFocus();
+    expect(checkbox).not.toBeInTheDocument();
+    expect(editButton).not.toBeInTheDocument();
+    expect(deleteButton).not.toBeInTheDocument();
+
+    fireEvent.change(input, { target: { value: modifiedTaskName } });
+    fireEvent.keyDown(input, { key: 'Escape', code: 'Escape', charCode: 27 });
 
     expect(input).not.toBeInTheDocument();
     expect(saveButton).not.toBeInTheDocument();

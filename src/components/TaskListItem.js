@@ -51,7 +51,7 @@ function TaskEditForm(props) {
     });
   };
 
-  const handleKeyEnter = (event) => {
+  const handleKeyEnter = () => {
     if (!taskName) {
       return;
     }
@@ -64,12 +64,24 @@ function TaskEditForm(props) {
     });
   };
 
+  const handleKeyEscape = () => {
+    onCancel();
+  };
+
   const handleKeyPress = (event) => {
     if (event.key !== 'Enter') {
       return;
     }
 
-    handleKeyEnter(event);
+    handleKeyEnter();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key !== 'Escape') {
+      return;
+    }
+
+    handleKeyEscape();
   };
 
   return (
@@ -78,6 +90,7 @@ function TaskEditForm(props) {
           value={taskName} 
           onChange={handleTaskNameChange} 
           onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           autoFocus
         />
         <Space>
