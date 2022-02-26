@@ -247,7 +247,6 @@ function TaskListItem(props) {
     <List.Item className='hoverable'>
       {editMode ?
         <TaskEditForm 
-          style={{ display: 'none' }}
           value={task?.name}
           onSave={handleNameChange}
           onCancel={handleCancelEdit}
