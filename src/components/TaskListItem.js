@@ -6,6 +6,24 @@ import { LoadingOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons
 
 import './TaskListItem.css';
 
+export class Group {
+  constructor() {
+    this.callbacks = [];
+  }
+
+  register(callback) {
+    this.callbacks = [...this.callbacks, callback];
+  }
+
+  unregister(callback) {
+    this.callbacks = this.callbacks.filter(cb => cb !== callback);
+  }
+
+  notify(callback) {
+    this.callbacks.filter(cb => cb !== callback).forEach(cb => cb());
+  }
+}
+
 function TaskEditForm(props) {
   const { 
     value = '', 
@@ -167,11 +185,14 @@ function TaskListItem(props) {
     onStatusChange = (task, callback) => callback(), 
     onNameChange = (task, callback) => callback(), 
     onDelete = (id, callback) => callback(),
+    group
   } = props;
 
   const [editMode, setEditMode] = React.useState(false);
 
   const handleStatusChange = (completed, done) => {
+    group?.notify(groupCallback);
+
     if (!task) {
       return;
     }
@@ -180,6 +201,7 @@ function TaskListItem(props) {
   };
 
   const handleEdit = () => {
+    group?.notify(groupCallback);
     setEditMode(true);
   };
 
@@ -198,12 +220,28 @@ function TaskListItem(props) {
   };
 
   const handleDelete = (done) => {
+    group?.notify();
+
     if (!task) {
       return;
     }
 
     onDelete(task.id, done);
   };
+
+  const groupCallback = React.useCallback(
+    () => {
+      setEditMode(false);
+    },
+    []
+  );
+
+  React.useEffect(() => {
+    group?.register(groupCallback);
+    return () => {
+      group?.unregister(groupCallback);
+    };
+  }, [groupCallback, group]);
 
   return (
     <List.Item className='hoverable'>
@@ -235,7 +273,8 @@ TaskListItem.propTypes = {
   }), 
   onStatusChange: PropTypes.func,
   onNameChange: PropTypes.func,
-  onDelete: PropTypes.func
+  onDelete: PropTypes.func,
+  group: PropTypes.instanceOf(Group)
 };
 
 export default TaskListItem;
