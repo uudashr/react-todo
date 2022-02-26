@@ -19,14 +19,8 @@ describe('TaskListItem with no task', () => {
   });
 });
 
-describe('TaskListItem with outstanding task', () => {
-  const setup = () => {
-    const task = {
-      id: 10,
-      name: 'Learn React JS',
-      completed: false
-    };
-
+describe('TaskListItem with task', () => {
+  const setup = (task) => {
     const handleStatusChange = jest.fn();
     const handleDelete = jest.fn();
 
@@ -38,17 +32,41 @@ describe('TaskListItem with outstanding task', () => {
       />
     );
 
-    return { task, handleStatusChange, handleDelete };
+    return { handleStatusChange, handleDelete };
   };
 
-  it('renders task', () => {
-    const { task } = setup();
+  const testCases = [
+    {
+      name: 'uncompleted',
+      task: {
+        id: 10,
+        name: 'Learn React JS',
+        completed: false
+      }
+    },
+    {
+      name: 'uncompleted (completed var is undefined)',
+      task: {
+        id: 10,
+        name: 'Learn React JS',
+      }
+    },
+    {
+      name: 'completed',
+      task: {
+        id: 10,
+        name: 'Learn React JS',
+        completed: true
+      }
+    }
+  ]
 
-    const item = screen.getByText(task.name);
-    expect(item).toBeInTheDocument();
+  test.each(testCases)('renders on $name task', ({task}) => {
+    setup(task);
 
-    const checkbox = screen.getByRole('checkbox');
-    expect(checkbox).not.toBeChecked();
+    const checkbox = screen.getByRole('checkbox', { name: task.name });
+    expect(checkbox.checked).toEqual(task.completed || false);
+    
 
     const editButton = screen.getByRole('button', { name: 'Edit' })
     expect(editButton).toBeInTheDocument();
@@ -57,26 +75,28 @@ describe('TaskListItem with outstanding task', () => {
     expect(deleteButton).toBeInTheDocument();
   });
 
-  test('click checkbox', () => {
-    const { handleStatusChange } = setup();
+  test.each(testCases)('click checkbox on $name task', ({ task }) => {
+    const { handleStatusChange } = setup(task);
 
-    const checkbox = screen.getByRole('checkbox');
+    const { completed = false } = task;
+
+    const checkbox = screen.getByRole('checkbox', { name: task.name });
     expect(checkbox).toBeEnabled();
-    expect(checkbox).not.toBeChecked();
+    expect(checkbox.checked).toEqual(completed);
 
     fireEvent.click(checkbox);
 
     expect(handleStatusChange).toBeCalled();
     const [taskArg, doneArg] = handleStatusChange.mock.calls[0];
-    expect(taskArg.completed).toEqual(true);
+    expect(taskArg.completed).toEqual(!completed);
     expect(checkbox).toBeDisabled();
     act(() => doneArg());
   });
 
-  test('click delete', () => {
-    const { task, handleDelete } = setup();
+  test.each(testCases)('click delete on $name task', ({ task }) => {
+    const { handleDelete } = setup(task);
 
-    const checkbox = screen.getByRole('checkbox');
+    const checkbox = screen.getByRole('checkbox', { name: task.name});
     const editButton = screen.getByRole('button', { name: 'Edit' });
     const deleteButton = screen.getByRole('button', { name: 'Delete' });
     
@@ -86,79 +106,6 @@ describe('TaskListItem with outstanding task', () => {
     
     fireEvent.click(deleteButton);
 
-    expect(handleDelete).toBeCalled();
-    const [idArg, doneArg] = handleDelete.mock.calls[0];
-    expect(idArg).toEqual(task.id);
-    expect(checkbox).toBeDisabled();
-    expect(editButton).toBeDisabled();
-    act(() => doneArg());
-  });
-});
-
-describe('TaskListItem with completed task', () => {
-  const setup = () => {
-    const task = {
-      id: 10,
-      name: 'Learn React JS',
-      completed: true
-    };
-
-    const handleStatusChange = jest.fn();
-    const handleDelete = jest.fn();
-
-    render(
-      <TaskListItem 
-        task={task} 
-        onStatusChange={handleStatusChange} 
-        onDelete={handleDelete}
-      />
-    );
-
-    return { task, handleStatusChange, handleDelete };
-  };
-
-  it('renders task', () => {
-    const { task } = setup();
-
-    const item = screen.getByText(task.name);
-    expect(item).toBeInTheDocument();
-
-    const editButton = screen.getByRole('button', { name: 'Edit' })
-    expect(editButton).toBeInTheDocument();
-
-    const deleteButton = screen.getByRole('button', { name: 'Delete' })
-    expect(deleteButton).toBeInTheDocument();
-  });
-
-  test('click checkbox', () => {
-    const { task, handleStatusChange } = setup();
-
-    const checkbox = screen.getByRole('checkbox');
-    expect(checkbox).toBeEnabled();
-    expect(checkbox).toBeChecked();
-
-    fireEvent.click(checkbox);
-
-    expect(handleStatusChange).toBeCalled();
-    const [taskArg, doneArg] = handleStatusChange.mock.calls[0];
-    expect(taskArg.id).toEqual(task.id);
-    expect(taskArg.completed).toEqual(false);
-    expect(checkbox).toBeDisabled();
-    act(() => doneArg());
-  });
-
-  test('click delete', () => {
-    const { task, handleDelete } = setup();
-
-    const checkbox = screen.getByRole('checkbox');
-    const editButton = screen.getByRole('button', { name: 'Edit' });
-    const deleteButton = screen.getByRole('button', { name: 'Delete' });
-    
-    expect(checkbox).toBeEnabled();
-    expect(editButton).toBeEnabled();
-    expect(deleteButton).toBeEnabled();
-    
-    fireEvent.click(deleteButton);
     expect(handleDelete).toBeCalled();
     const [idArg, doneArg] = handleDelete.mock.calls[0];
     expect(idArg).toEqual(task.id);
