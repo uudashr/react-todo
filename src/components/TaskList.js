@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { List, Typography } from "antd";
-import TaskListItem from './TaskListItem';
+import TaskListItem, { Group } from './TaskListItem';
 
 const { Title } = Typography;
-
 function TaskList(props) {
   const { 
     title, 
@@ -13,7 +12,8 @@ function TaskList(props) {
     tasks, 
     onItemStatusChange, 
     onItemNameChange, 
-    onItemDelete
+    onItemDelete,
+    group = new Group()
   } = props;
   
   const header = title ? <Title level={4}>{title}</Title> : undefined;
@@ -32,6 +32,7 @@ function TaskList(props) {
           onStatusChange={onItemStatusChange} 
           onNameChange={onItemNameChange}
           onDelete={onItemDelete}
+          group={group}
         />
       )} />
   );
@@ -47,7 +48,8 @@ TaskList.propTypes = {
   })),
   onStatusChange: PropTypes.func,
   onItemNameChange: PropTypes.func,
-  onItemDelete: PropTypes.func
+  onItemDelete: PropTypes.func,
+  group: PropTypes.instanceOf(Group)
 };
 
 export default TaskList;

@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 import TaskForm from '../components/TaskForm';
 import TaskList from '../components/TaskList';
+import { Group } from '../components/TaskListItem'
 
 import './Todo.css';
 import { useAuth } from '../auth';
@@ -106,6 +107,8 @@ function Todo(props) {
     message.success('Logged out');
     navigate('/login', { replace: true });
   };
+
+  const group = new Group();
 
   React.useEffect(() => {
     if (!taskClient) {
@@ -202,6 +205,7 @@ function Todo(props) {
             onItemStatusChange={handleTaskStatusChange}
             onItemNameChange={handleTaskNameChange}
             onItemDelete={handleDeleteTask}
+            group={group}
           />
           <Divider plain dashed>Completed tasks</Divider>
           <TaskList
@@ -210,6 +214,7 @@ function Todo(props) {
             onItemStatusChange={handleTaskStatusChange}
             onItemNameChange={handleTaskNameChange}
             onItemDelete={handleDeleteTask}
+            group={group}
           />
         </Space>
       </Col>
