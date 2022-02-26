@@ -78,6 +78,7 @@ function TaskEditForm(props) {
           value={taskName} 
           onChange={handleTaskNameChange} 
           onKeyPress={handleKeyPress}
+          autoFocus
         />
         <Space>
           <Button
