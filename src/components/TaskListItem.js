@@ -92,12 +92,27 @@ function TaskView(props) {
   const { 
     name = '', 
     completed = false, 
-    deleting = false, // TODO: state 'deleting' or 'changingStatus' should be execlusive
-    changingStatus = false, 
-    onStatusChange = (completed) => {}, 
-    onDelete = () => {},
+    onStatusChange = (completed, callback) => callback(), 
+    onDelete = (callback) => callback(),
     onEdit = () => {}
   } = props;
+
+  const [deleting, setDeleting] = React.useState(false);
+  const [changingStatus, setChangingStatus] = React.useState(false);
+
+  const handleStatusChange = (completed) => {
+    setChangingStatus(true);
+    onStatusChange(completed, (err) => {
+      setChangingStatus(false);
+    });
+  };
+
+  const handleDelete = () => {
+    setDeleting(true);
+    onDelete((err) => {
+      setDeleting(false)
+    })
+  }
 
   return (
     <>
@@ -105,7 +120,7 @@ function TaskView(props) {
         style={{ width: '100%' }}
         disabled={changingStatus || deleting}
         checked={completed}
-        onChange={event => onStatusChange(event.target.checked)}
+        onChange={event => handleStatusChange(event.target.checked)}
       >
         {name}
       </Checkbox>
@@ -131,7 +146,7 @@ function TaskView(props) {
           className='hover-control' 
           disabled={changingStatus}
           loading={deleting}
-          onClick={onDelete} 
+          onClick={handleDelete} 
         />
       </Space>
     </>
@@ -141,8 +156,6 @@ function TaskView(props) {
 TaskView.propTypes = {
   name: PropTypes.string,
   completed: PropTypes.bool,
-  deleting: PropTypes.bool,
-  changingStatus: PropTypes.bool,
   onStatusChange: PropTypes.func,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func
@@ -156,25 +169,14 @@ function TaskListItem(props) {
     onDelete = (id, callback) => callback(),
   } = props;
 
-  const [changingStatus, setChangingStatus] = React.useState(false);
-  const [deleting, setDeleting] = React.useState(false);
   const [editMode, setEditMode] = React.useState(false);
 
-  const handleStatusChange = (completed) => {
+  const handleStatusChange = (completed, done) => {
     if (!task) {
       return;
     }
 
-    if (!onStatusChange) {
-      return;
-    }
-
-    setChangingStatus(true);
-    onStatusChange({id: task.id, completed}, (err) => {
-      if (err) {
-        setChangingStatus(false);
-      }
-    });
+    onStatusChange({id: task.id, completed}, done);
   };
 
   const handleEdit = () => {
@@ -195,17 +197,12 @@ function TaskListItem(props) {
     });
   };
 
-  const handleDelete = () => {
+  const handleDelete = (done) => {
     if (!task) {
       return;
     }
 
-    setDeleting(true);
-    onDelete(task.id, (err) => {
-      if (err) {
-        setDeleting(false);
-      }
-    });
+    onDelete(task.id, done);
   };
 
   return (
@@ -221,8 +218,6 @@ function TaskListItem(props) {
         <TaskView 
           name={task?.name} 
           completed={task?.completed} 
-          changingStatus={changingStatus}
-          deleting={deleting}
           onStatusChange={handleStatusChange}
           onEdit={handleEdit}
           onDelete={handleDelete}
