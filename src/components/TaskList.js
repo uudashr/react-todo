@@ -46,7 +46,7 @@ TaskList.propTypes = {
     name: PropTypes.string.isRequired,
     completed: PropTypes.bool
   })),
-  onStatusChange: PropTypes.func,
+  onItemStatusChange: PropTypes.func,
   onItemNameChange: PropTypes.func,
   onItemDelete: PropTypes.func,
   group: PropTypes.instanceOf(Group)
