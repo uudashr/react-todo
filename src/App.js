@@ -22,7 +22,7 @@ function App(props) {
     
     <AuthProvider authClient={todoClient}>
       <Routes>
-        <Route exact path="/" element={<Navigate to='/todo' />} />
+        <Route path="/" element={<Navigate to='/todo' />} />
         <Route 
           path="/todo" 
           element={
