@@ -54,7 +54,6 @@ function LogIn() {
 
   return (
     <Row
-      type='flex'
       justify='center'
       style={{ minHeight: '50vh', padding: '5rem' }}
     >

@@ -56,7 +56,6 @@ function SignUp(props) {
 
   return (
     <Row 
-      type='flex' 
       justify='center' 
       align='middle' 
       style={{ minHeight: '100vh' }}

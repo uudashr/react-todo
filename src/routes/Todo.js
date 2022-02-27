@@ -178,7 +178,6 @@ function Todo(props) {
 
   return (
     <Row
-      type='flex'
       justify='center'
       style={{ minHeight: '50vh', padding: '5rem' }}
     >
