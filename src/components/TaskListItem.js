@@ -243,7 +243,7 @@ function TaskListItem(props) {
   };
 
   const handleDelete = (done) => {
-    group?.notify();
+    group?.notify(groupCallback);
 
     if (!task) {
       return;
