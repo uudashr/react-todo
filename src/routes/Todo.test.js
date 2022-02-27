@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter, useLinkClickHandler, useNavigate } from 'react-router-dom';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 
 import { AuthProvider } from '../auth';
