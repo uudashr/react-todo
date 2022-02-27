@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Row, Col, Button, Input } from "antd";
 
-const NOOP_ON_ADD = (name, callback) => callback();
-function TaskForm({ onAdd = NOOP_ON_ADD, nameValue = ''}) {  
+const NOOP_ADD_HANDLER = (name, callback) => callback();
+
+function TaskForm({ onAdd = NOOP_ADD_HANDLER, nameValue = ''}) {  
   const [name, setName] = React.useState(nameValue);
   const [addTaskEnabled, setAddTaskEnabled] = React.useState(!!nameValue);
   const [loading, setLoading] = React.useState(false);
