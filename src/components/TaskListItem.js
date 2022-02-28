@@ -202,7 +202,7 @@ TaskView.propTypes = {
   onEdit: PropTypes.func
 };
 
-function TaskListItem(props) {
+export default function TaskListItem(props) {
   const { 
     task, 
     onStatusChange = (task, callback) => callback(), 
@@ -298,5 +298,3 @@ TaskListItem.propTypes = {
   onDelete: PropTypes.func,
   group: PropTypes.instanceOf(Group)
 };
-
-export default TaskListItem;

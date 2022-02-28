@@ -30,7 +30,7 @@ const validateMessages = {
   },
 };
 
-function LogIn() {
+export default function LogIn() {
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -109,5 +109,3 @@ function LogIn() {
     </Row>
   );
 }
-
-export default LogIn;

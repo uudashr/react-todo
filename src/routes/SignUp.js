@@ -29,7 +29,7 @@ const validateMessages = {
   },
 };
 
-function SignUp(props) {
+export default function SignUp(props) {
   const { authClient } = props;
 
   const [loading, setLoading] = React.useState(false);
@@ -145,6 +145,3 @@ SignUp.propTypes = {
     signUp: PropTypes.func.isRequired
   })
 };
-
-
-export default SignUp;

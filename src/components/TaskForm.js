@@ -5,7 +5,7 @@ import { Row, Col, Button, Input } from "antd";
 
 const NOOP_ADD_HANDLER = (name, callback) => callback();
 
-function TaskForm({ onAdd = NOOP_ADD_HANDLER, nameValue = ''}) {  
+export default function TaskForm({ onAdd = NOOP_ADD_HANDLER, nameValue = ''}) {  
   const [name, setName] = React.useState(nameValue);
   const [addTaskEnabled, setAddTaskEnabled] = React.useState(!!nameValue);
   const [loading, setLoading] = React.useState(false);
@@ -80,5 +80,3 @@ TaskForm.propTypes = {
   nameValue: PropTypes.string,
   onAdd: PropTypes.func
 };
-
-export default TaskForm;

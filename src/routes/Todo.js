@@ -25,7 +25,7 @@ import { useAuth } from '../auth';
 
 const { Title } = Typography;
 
-function Todo(props) {
+export default function Todo(props) {
   const {taskClient} = props;
   
   const [outstandingTasks, setOutstandingTasks] = React.useState([]);
@@ -229,5 +229,3 @@ Todo.propTypes = {
     updateTaskStatus: PropTypes.func.isRequired
   }),
 };
-
-export default Todo;

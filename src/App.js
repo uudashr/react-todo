@@ -15,7 +15,7 @@ import SignUp from './routes/SignUp';
 
 import './App.css';
 
-function App(props) {
+export default function App(props) {
   const { todoClient } = props;
 
   return (
@@ -53,5 +53,3 @@ App.propTypes = {
     deleteTask: PropTypes.func.isRequired
   }),
 };
-
-export default App;

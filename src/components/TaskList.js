@@ -5,7 +5,7 @@ import { List, Typography } from "antd";
 import TaskListItem, { Group } from './TaskListItem';
 
 const { Title } = Typography;
-function TaskList(props) {
+export default function TaskList(props) {
   const { 
     title, 
     loading, 
@@ -51,5 +51,3 @@ TaskList.propTypes = {
   onItemDelete: PropTypes.func,
   group: PropTypes.instanceOf(Group)
 };
-
-export default TaskList;

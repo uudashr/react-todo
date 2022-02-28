@@ -1,5 +1,5 @@
 
-class MemTodoClient {
+export default class MemTodoClient {
   constructor() {
     this._accounts = [
       { email: 'uudashr@gmail.com', name: 'Nuruddin Ashr', password: 'secret' },
@@ -209,8 +209,6 @@ class MemTodoClient {
     });
   }
 }
-
-export default MemTodoClient;
 
 class ApiError extends Error {
   constructor(code, message, ...params) {
