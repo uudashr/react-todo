@@ -24,8 +24,8 @@ class TodoClient {
       return token;
     }).catch(err => {
       const res = err.response;
-      if (res.status === 401) {
-        const {code, message} = res.data.error;
+      if (res && res.status === 401) {
+        const { code, message } = res.data.error;
         return Promise.reject(new ApiError(code, message, { cause: err }));
       }
 
@@ -41,15 +41,15 @@ class TodoClient {
     return this.axiosInstance.post('/register', {
       email, name, password
     }).then(res => undefined)
-    .catch(err => {
-      const res = err.response;
-      if (res.status === 409) {
-        const {code, message} = res.data.error;
-        return Promise.reject(new ApiError(code, message, { cause: err }));
-      }
+      .catch(err => {
+        const res = err.response;
+        if (res && res.status === 409) {
+          const { code, message } = res.data.error;
+          return Promise.reject(new ApiError(code, message, { cause: err }));
+        }
 
-      return Promise.reject(err);
-    });
+        return Promise.reject(err);
+      });
   }
 
   userInfo() {
@@ -144,15 +144,15 @@ class TodoClient {
       },
       withCredentials: true,
     }).then(res => undefined)
-    .catch(err => {
-      const res = err.response;
-      if (res.status === 400) {
-        const {code, message} = res.data.error;
-        return Promise.reject(new ApiError(code, message, { cause: err }));
-      }
+      .catch(err => {
+        const res = err.response;
+        if (res && res.status === 400) {
+          const { code, message } = res.data.error;
+          return Promise.reject(new ApiError(code, message, { cause: err }));
+        }
 
-      return Promise.reject(err);
-    });
+        return Promise.reject(err);
+      });
   }
 
   deleteTask(id) {
