@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, getNodeText, logRoles, prettyDOM, render, screen, waitFor, within } from '@testing-library/react';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 
@@ -54,6 +54,7 @@ describe('Todo with taskClient', () => {
       completedTasks: jest.fn(() => Promise.resolve(completedTasks)),
       addTask: jest.fn(),
       updateTaskStatus: jest.fn(),
+      updateTaskName: jest.fn(),
       deleteTask: jest.fn()
     };
 
@@ -195,6 +196,38 @@ describe('Todo with taskClient', () => {
     expect(message.success).toHaveBeenCalledWith('Task deleted');
   });
 
+  test('edit task', async () => {
+    const { outstandingTasks, taskClient } = setup();
+    const task = outstandingTasks[0];
+    const newTextValue = task.name + ' (modified)';
+
+    await waitFor(() => {
+      expect(taskClient.outstandingTasks).toBeCalled();
+    });
+
+    const listItem = screen.getByRole('listitem', { name: hasTextContent(task.name) });
+    const editButton = within(listItem).getByRole('button', { name: 'Edit' });
+    fireEvent.click(editButton);
+
+    const textInput = within(listItem).getByDisplayValue(task.name);
+    const saveButton = within(listItem).getByRole('button', { name: 'Save' });
+    fireEvent.change(textInput, { target: { value: newTextValue } });
+    taskClient.updateTaskName.mockResolvedValue();
+    fireEvent.click(saveButton);
+
+    expect(taskClient.updateTaskName).toBeCalledWith(task.id, newTextValue);
+    
+    await waitFor(() => {
+      expect(taskClient.outstandingTasks).toHaveBeenCalledTimes(2);
+    });
+
+    await waitFor(() => {
+      expect(taskClient.completedTasks).toHaveBeenCalledTimes(2);
+    });
+
+    expect(message.success).toHaveBeenCalledWith('Task updated');
+  });
+
   test('click sign out', async () => {
     const { authClient, taskClient } = setup();
 
@@ -245,3 +278,9 @@ describe('Todo with no taskClient', () => {
     expect(message.success).not.toHaveBeenCalledWith('Task added');
   });
 });
+
+function hasTextContent(text) {
+  return (accessibleName, element) => {
+    return element.textContent === text;
+  };
+}
