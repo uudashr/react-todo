@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-class TodoClient {
+export default class AxiosTodoClient {
   constructor(opts) {
     const baseURL = opts?.baseURL || 'http://localhost:3500';
     const timeout = opts?.timeout || 1000;
@@ -165,8 +165,6 @@ class TodoClient {
     }).then(res => undefined);
   }
 }
-
-export default TodoClient;
 
 class ApiError extends Error {
   constructor(code, message, ...params) {
