@@ -205,7 +205,7 @@ describe('Todo with taskClient', () => {
       expect(taskClient.outstandingTasks).toBeCalled();
     });
 
-    const listItem = screen.getByRole('listitem', { name: hasTextContent(task.name) });
+    const listItem = screen.getByRole('listitem', hasTextContent(task.name));
     const editButton = within(listItem).getByRole('button', { name: 'Edit' });
     fireEvent.click(editButton);
 
@@ -280,7 +280,7 @@ describe('Todo with no taskClient', () => {
 });
 
 function hasTextContent(text) {
-  return (accessibleName, element) => {
+  return { name: (accessibleName, element) => {
     return element.textContent === text;
-  };
+  }};
 }
