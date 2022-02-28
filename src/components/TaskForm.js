@@ -13,10 +13,6 @@ function TaskForm({ onAdd = NOOP_ADD_HANDLER, nameValue = ''}) {
   const inputRef = React.useRef(null);
 
   const handleClick = () => {
-    if (!onAdd) {
-      return;
-    }
-
     setLoading(true);
     onAdd(name, (err) => {
       setLoading(false);
@@ -27,10 +23,6 @@ function TaskForm({ onAdd = NOOP_ADD_HANDLER, nameValue = ''}) {
 
   const handleKeyEnter = () => {
     if (!name) {
-      return;
-    }
-
-    if (!onAdd) {
       return;
     }
 
