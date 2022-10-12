@@ -12,6 +12,7 @@ import AxiosTodoClient, { localTokenStorage } from './client/AxiosTodoClient';
 
 const todoClient = new AxiosTodoClient({
   tokenStorage: localTokenStorage('__reactTodo:token'),
+  timeout: 2000,
 });
 
 const container = document.getElementById('root');
