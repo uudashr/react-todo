@@ -75,8 +75,8 @@ describe('Todo with taskClient', () => {
       expect(taskClient.outstandingTasks).toHaveBeenCalled();
     });
 
-    outstandingTasks.forEach((task) => {
-      const checkbox = screen.getByLabelText(task.name);
+    outstandingTasks.forEach(async (task) => {
+      const checkbox = await screen.findByLabelText(task.name);
       expect(checkbox).not.toBeChecked();
     });
   });
@@ -88,8 +88,8 @@ describe('Todo with taskClient', () => {
       expect(taskClient.completedTasks).toHaveBeenCalled();
     });
 
-    completedTasks.forEach((task) => {
-      const checkbox = screen.getByLabelText(task.name);
+    completedTasks.forEach(async (task) => {
+      const checkbox = await screen.findByLabelText(task.name);
       expect(checkbox).toBeChecked();
     });
   });
@@ -102,7 +102,7 @@ describe('Todo with taskClient', () => {
     });
 
     const task = outstandingTasks[0];
-    const checkbox = screen.getByLabelText(task.name);
+    const checkbox = await screen.findByLabelText(task.name);
     expect(checkbox).not.toBeChecked();
 
     taskClient.updateTaskStatus.mockResolvedValue();
@@ -122,7 +122,7 @@ describe('Todo with taskClient', () => {
     });
 
     const task = completedTasks[0];
-    const checkbox = screen.getByLabelText(task.name);
+    const checkbox = await screen.findByLabelText(task.name);
     expect(checkbox).toBeChecked();
     expect(checkbox.checked).toEqual(true);
 
@@ -176,7 +176,7 @@ describe('Todo with taskClient', () => {
       expect(taskClient.outstandingTasks).toHaveBeenCalled();
     });
 
-    const deleteButtons = screen.queryAllByRole('button', { name: 'Delete' });
+    const deleteButtons = await screen.findAllByRole('button', { name: 'Delete' });
     const deleteButton = deleteButtons[0];
     const task = outstandingTasks[0];
 
@@ -205,7 +205,7 @@ describe('Todo with taskClient', () => {
       expect(taskClient.outstandingTasks).toBeCalled();
     });
 
-    const listItem = screen.getByRole('listitem', hasTextContent(task.name));
+    const listItem = await screen.findByRole('listitem', hasTextContent(task.name));
     const editButton = within(listItem).getByRole('button', { name: 'Edit' });
     fireEvent.click(editButton);
 
