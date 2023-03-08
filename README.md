@@ -6,6 +6,7 @@ Simple React Todo Application
 1. [Jest Documentation](https://jestjs.io/docs/getting-started)
 2. [Testing Library Documentation](https://testing-library.com/docs/)
 3. [How to fetch data with React Hooks](https://www.robinwieruch.de/react-hooks-fetch-data/)
+4. [Make Create-React-App Faster with Rust](https://jwchang0206.medium.com/make-create-react-app-faster-with-rust-6c75ffa8fdfd)
 
 ## Testing
 ### jsdom

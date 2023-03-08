@@ -17,10 +17,9 @@
     "web-vitals": "^3.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": [
@@ -45,5 +44,10 @@
       "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
     ],
     "resetMocks": false
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.0.0",
+    "@swc/helpers": "^0.4.14",
+    "craco-swc": "^0.5.1"
   }
 }
